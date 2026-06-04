@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#FFFDF8" />
+
+  <!-- ============================================================
+       SEO & WhatsApp / Social Sharing
+       Edit: title, description, og:image, og:url below
+  ============================================================ -->
+  <title>Namshiv turns ONE | 13 June 2026</title>
+  <meta name="description"
+    content="You are cordially invited to celebrate Namshiv's magical 1st birthday! Join us for a golden celebration on 13 June 2026." />
+
+  <!-- Open Graph (WhatsApp / Facebook preview) -->
+  <meta property="og:title" content="Namshiv turns ONE" />
+  <meta property="og:description"
+    content="You're invited to Namshiv's 1st Birthday Celebration! Tap to open the magical invitation." />
+  <meta property="og:image" content="images/photo1.jpg" />
+  <meta property="og:type" content="website" />
+  <!-- EDIT: replace with your deployed URL -->
+  <meta property="og:url" content="https://YOUR_SITE_URL_HERE" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Namshiv turns ONE" />
+  <meta name="twitter:description" content="You're invited to Namshiv's 1st Birthday Celebration!" />
+  <meta name="twitter:image" content="images/photo1.jpg" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&family=Great+Vibes&display=swap"
+    rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+  <!-- FIXED BACKGROUND CANVAS -->
+  <canvas id="agCanvas"></canvas>
+
+  <!-- ============================================================
+     FLOATING HEADER  (Venue info — always visible)
+============================================================ -->
+  <header class="floating-header" id="floatingHeader">
+    <div class="fh-inner">
+      <span class="fh-logo">Namshiv</span>
+      <a href="#venue" class="fh-btn" id="headerMapBtn" aria-label="View venue location">
+        <span class="fh-btn-icon"><i class="ph-fill ph-map-pin"></i></span>
+        <span>Location</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+     BACKGROUND MUSIC PLAYER
+     To add your audio: place your .mp3 file in the /audio folder
+     and update the src below.
+============================================================ -->
+  <div class="music-ctrl" id="musicCtrl" role="button" aria-label="Toggle background music" tabindex="0">
+    <audio id="bgMusic" loop preload="none">
+      <!-- EDIT: replace with your audio file path -->
+      <source src="audio/Peace Moves Without Pressure.mp3" type="audio/mpeg" />
+    </audio>
+    <svg class="music-icon music-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      id="musicOnIcon">
+      <path d="M9 18V5l12-2v13" />
+      <circle cx="6" cy="18" r="3" />
+      <circle cx="18" cy="16" r="3" />
+    </svg>
+    <svg class="music-icon music-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      id="musicOffIcon" style="display:none;">
+      <path d="M9 18V5l12-2v13" />
+      <circle cx="6" cy="18" r="3" />
+      <circle cx="18" cy="16" r="3" />
+      <line x1="1" y1="1" x2="23" y2="23" />
+    </svg>
+  </div>
+
+  <!-- ============================================================
+     SECTION 1 — BALLOON POP COVER (Landing)
+============================================================ -->
+  <section class="hero-cover" id="heroCover">
+    <!-- Animated bubbles background -->
+    <div class="bubbles-bg" id="bubblesBg" aria-hidden="true"></div>
+
+    <!-- Floating decorative balloons (removed, using Three.js background) -->
+
+    <!-- Stars / sparkles -->
+    <div class="gold-stars" aria-hidden="true" id="goldStars"></div>
+
+    <div class="cover-content">
+      <p class="cover-pretext">You are invited to</p>
+      <h1 class="cover-title">
+        <!-- EDIT: Baby's name -->
+        <span class="name-shine">Namshiv's</span>
+      </h1>
+      <p class="cover-subtitle">First Birthday</p>
+
+      <!-- The Giant 3D Balloon -->
+      <div class="big-balloon-wrap" id="bigBalloonWrap" role="button"
+        aria-label="Tap to pop the balloon and reveal invitation" tabindex="0">
+        <div class="big-balloon" id="bigBalloon">
+          <div class="balloon-body">
+            <div class="balloon-shine"></div>
+            <div class="balloon-shine2"></div>
+            <span class="balloon-text"><i class="ph-fill ph-balloon"></i></span>
+          </div>
+          <div class="balloon-knot"></div>
+          <div class="balloon-string"></div>
+        </div>
+        <p class="tap-prompt" id="tapPrompt">
+          <span class="tap-bounce"><i class="ph-fill ph-sparkle"></i> Tap to Pop! <i
+              class="ph-fill ph-sparkle"></i></span>
+        </p>
+      </div>
+
+      <!-- Pop particles container -->
+      <div class="pop-particles" id="popParticles" aria-hidden="true"></div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator" id="scrollIndicator" aria-hidden="true">
+      <div class="scroll-dot"></div>
+      <span>Scroll to explore</span>
+    </div>
+  </section>
+
+  <!-- POST-POP SCROLL HINT (shown after balloon pops, for elder users) -->
+  <div class="post-pop-hint" id="postPopScrollHint" role="button" tabindex="0"
+    aria-label="Scroll down to see the invitation details">
+    <div class="pph-inner">
+      <span class="pph-label">Scroll Down</span>
+      <div class="pph-arrows">
+        <i class="ph-fill ph-caret-double-down"></i>
+      </div>
+      <span class="pph-sub">to see the invitation</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+     SECTION 2 — BABY NAME & HERO PHOTO
+============================================================ -->
+  <section class="name-section reveal-section" id="nameSection">
+    <div class="name-bg-glow" aria-hidden="true"></div>
+    <div class="name-content">
+      <div class="golden-divider" aria-hidden="true"><span>✦</span></div>
+      <p class="name-tag">Celebrating</p>
+      <!-- EDIT: Baby's name -->
+      <h2 class="baby-name-display">Namshiv</h2>
+      <p class="baby-tagline">One year of pure magic <i class="ph-fill ph-sparkle"></i></p>
+
+      <div class="hero-photo-frame">
+        <img src="images/photo1.jpg" alt="Namshiv with balloons and birthday cake" class="hero-photo" loading="eager" />
+        <div class="photo-glow" aria-hidden="true"></div>
+        <div class="photo-corner tl" aria-hidden="true"></div>
+        <div class="photo-corner tr" aria-hidden="true"></div>
+        <div class="photo-corner bl" aria-hidden="true"></div>
+        <div class="photo-corner br" aria-hidden="true"></div>
+      </div>
+
+      <p class="emotional-quote">"Every smile, every giggle, every tiny step — you have filled our world with a love we
+        never knew existed."</p>
+      <p class="quote-attr">— With all our love, Amma,Achan &amp; Shiva <i class="ph-fill ph-heart"></i></p>
+      <div class="golden-divider" aria-hidden="true"><span>✦</span></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+     SECTION 3 — SCRATCH-TO-REVEAL DATE
+============================================================ -->
+  <section class="scratch-section reveal-section" id="scratchSection">
+    <div class="section-label">The Special Day</div>
+    <h2 class="section-title">Reveal the Date</h2>
+    <p class="section-sub">Scratch below to unveil the magic date <i class="ph-fill ph-confetti"></i></p>
+
+    <div class="scratch-card-wrap">
+      <div class="scratch-card-revealed" id="scratchReveal" aria-hidden="true">
+        <div class="revealed-content">
+          <p class="rev-label">SAVE THE DATE</p>
+          <!-- EDIT: Date details below -->
+          <p class="rev-date">13 <span>June</span></p>
+          <p class="rev-year">2026</p>
+          <p class="rev-day">Saturday</p>
+          <div class="rev-divider"></div>
+          <!-- EDIT: Time of celebration -->
+          <p class="rev-time"><i class="ph-fill ph-clock"></i> 6:00 PM Onwards</p>
+        </div>
+      </div>
+      <canvas class="scratch-canvas" id="scratchCanvas" aria-label="Scratch here to reveal the date"
+        role="img"></canvas>
+      <p class="scratch-hint" id="scratchHint"><i class="ph-fill ph-hand-pointing"></i> Scratch me!</p>
+    </div>
+
+    <!-- Confetti container (fires after scratch) -->
+    <div class="confetti-wrap" id="confettiWrap" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================================================
+     SECTION 4 — COUNTDOWN TIMER
+============================================================ -->
+  <section class="countdown-section reveal-section" id="countdownSection">
+    <div class="section-label">Counting Down</div>
+    <h2 class="section-title">The Big Day Arrives In</h2>
+
+    <div class="countdown-grid">
+      <div class="count-box">
+        <div class="count-num" id="cdDays">00</div>
+        <div class="count-label">Days</div>
+      </div>
+      <div class="count-sep" aria-hidden="true">:</div>
+      <div class="count-box">
+        <div class="count-num" id="cdHours">00</div>
+        <div class="count-label">Hours</div>
+      </div>
+      <div class="count-sep" aria-hidden="true">:</div>
+      <div class="count-box">
+        <div class="count-num" id="cdMinutes">00</div>
+        <div class="count-label">Minutes</div>
+      </div>
+      <div class="count-sep" aria-hidden="true">:</div>
+      <div class="count-box">
+        <div class="count-num" id="cdSeconds">00</div>
+        <div class="count-label">Seconds</div>
+      </div>
+    </div>
+
+    <!-- EDIT: Party date/time (ISO format) for countdown -->
+    <p class="countdown-caption">Until Namshiv's 1st Birthday — 13 June 2026 🎂</p>
+  </section>
+
+  <!-- ============================================================
+     SECTION 5 — INVITATION MESSAGE
+============================================================ -->
+  <section class="invite-section reveal-section" id="inviteSection">
+    <div class="invite-inner">
+      <div class="invite-ornament" aria-hidden="true">✦ ✦ ✦</div>
+      <p class="invite-tag">With Joy &amp; Love</p>
+
+      <!-- EDIT: Parent names -->
+      <h2 class="invite-parents">Together with their family,</h2>
+      <p class="invite-parents-name">
+        <!-- EDIT: Parents' names -->
+        <em>Amma, Achan &amp; Shiva </em><br />cordially invite you to celebrate
+      </p>
+
+      <div class="invite-name-big">
+        <!-- EDIT: Baby's name -->
+        Namshiv's
+      </div>
+      <div class="invite-one">First Birthday Celebration</div>
+
+      <div class="invite-details-box">
+        <div class="idb-row">
+          <span class="idb-icon"><i class="ph-fill ph-calendar-blank"></i></span>
+          <div>
+            <div class="idb-title">Date</div>
+            <!-- EDIT: Date -->
+            <div class="idb-value">13th June, 2026 • Saturday</div>
+          </div>
+        </div>
+        <div class="idb-divider"></div>
+        <div class="idb-row">
+          <span class="idb-icon"><i class="ph-fill ph-clock"></i></span>
+          <div>
+            <div class="idb-title">Time</div>
+            <!-- EDIT: Time -->
+            <div class="idb-value">6:00 PM Onwards</div>
+          </div>
+        </div>
+        <div class="idb-divider"></div>
+        <div class="idb-row">
+          <span class="idb-icon"><i class="ph-fill ph-map-pin"></i></span>
+          <div>
+            <div class="idb-title">Venue</div>
+            <!-- EDIT: Venue name and address -->
+            <div class="idb-value" id="inviteVenue">To Be Announced</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDIT: Emotional message below -->
+      <p class="invite-message">
+        One tiny miracle. One whole year.<br />
+        Namshiv's laughter has lit up every corner of our hearts.<br />
+        We want you — our dearest people — by our side<br />
+        as we celebrate this golden milestone.<br /><br />
+        Come, let's make memories that last a lifetime. <i class="ph-fill ph-heart"></i>
+      </p>
+
+      <div class="invite-ornament" aria-hidden="true">✦ ✦ ✦</div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+     SECTION 6 — BABY PHOTO SPOTLIGHT
+============================================================ -->
+  <section class="spotlight-section reveal-section" id="spotlightSection">
+    <div class="section-label">Our Little Star</div>
+    <h2 class="section-title">Namshiv Through the Year</h2>
+
+    <div class="spotlight-grid">
+      <div class="spotlight-card sc-big">
+        <img src="images/photo6.jpg" alt="Namshiv close-up portrait" loading="lazy" />
+        <div class="sc-overlay">
+          <p>Wrapped in love<i class="ph-fill ph-heart"></i></p>
+        </div>
+      </div>
+      <div class="spotlight-card sc-small">
+        <img src="images/photo4.jpg" alt="Namshiv sitting and smiling" loading="lazy" />
+        <div class="sc-overlay">
+          <p>Joy in every move <i class="ph-fill ph-sparkle"></i></p>
+        </div>
+      </div>
+      <div class="spotlight-card sc-small">
+        <img src="images/photo3.jpg" alt="Namshiv held by grandparent" loading="lazy" />
+        <div class="sc-overlay">
+          <p>Pure eyes, pure love  <i class="ph-fill ph-smiley"></i></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+     SECTION 7 — GALLERY
+============================================================ -->
+  <section class="gallery-section reveal-section" id="gallerySection">
+    <div class="section-label">Precious Moments</div>
+    <h2 class="section-title">A Year of Smiles</h2>
+    <p class="section-sub">Tap any photo to view full size</p>
+
+    <div class="gallery-masonry">
+      <div class="gal-item gal-tall" data-src="images/photo1.jpg">
+        <img src="images/photo1.jpg" alt="Namshiv with birthday balloons and cake" loading="lazy" />
+        <div class="gal-shine" aria-hidden="true"></div>
+      </div>
+      <div class="gal-item" data-src="images/photo7.png">
+        <img src="images/photo7.png" alt="Namshiv birthday" loading="lazy" />
+        <div class="gal-shine" aria-hidden="true"></div>
+      </div>
+      <div class="gal-item" data-src="images/photo3.jpg">
+        <img src="images/photo3.jpg" alt="Namshiv with grandparent" loading="lazy" />
+        <div class="gal-shine" aria-hidden="true"></div>
+      </div>
+      <div class="gal-item gal-wide" data-src="images/photo4.jpg">
+        <img src="images/photo4.jpg" alt="Namshiv sitting on sofa" loading="lazy" />
+        <div class="gal-shine" aria-hidden="true"></div>
+      </div>
+      <div class="gal-item gal-tall" data-src="images/photo8.jpg">
+        <img src="images/photo8.jpg" alt="Namshiv portrait close-up" loading="lazy" />
+        <div class="gal-shine" aria-hidden="true"></div>
+      </div>
+      <div class="gal-item gal-tall" data-src="images/photo9.jpg">
+        <img src="images/photo9.jpg" alt="Namshiv precious memory" loading="lazy" />
+        <div class="gal-shine" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-label="Full size photo viewer" aria-modal="true">
+      <button class="lb-close" id="lbClose" aria-label="Close photo viewer">✕</button>
+      <img src="" alt="" class="lb-img" id="lbImg" />
+    </div>
+  </section>
+
+  <!-- (Anti-gravity section removed, now a global background) -->
+
+  <!-- ============================================================
+     SECTION 9 — FAMILY PHOTO
+============================================================ -->
+  <section class="family-section reveal-section" id="familySection">
+    <div class="section-label">The Beautiful Family</div>
+    <h2 class="section-title">With Love From Us</h2>
+
+    <div class="family-photo-wrap">
+      <img src="images/photo2.jpg" alt="Namshiv's beautiful family portrait" class="family-photo" loading="lazy" />
+      <div class="family-photo-overlay"></div>
+
+      <div class="family-caption">
+        <!-- EDIT: Family caption / names -->
+        <p>Together, we are everything <i class="ph-fill ph-heart"></i></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+     SECTION 10 — VENUE & LOCATION
+============================================================ -->
+  <section class="venue-section reveal-section" id="venue">
+    <div class="section-label">Join Us</div>
+    <h2 class="section-title">Where to Find Us</h2>
+
+    <div class="venue-card">
+      <div class="venue-top">
+        <span class="venue-big-icon"><i class="ph-fill ph-map-pin"></i></span>
+        <!-- EDIT: Venue name -->
+        <h3 class="venue-name" id="venueName">To Be Announced</h3>
+        <!-- EDIT: Venue address -->
+        <p class="venue-address" id="venueAddress">Full address will be updated soon.<br />Stay tuned! <i
+            class="ph-fill ph-balloon"></i></p>
+      </div>
+
+      <div class="venue-details-row">
+        <div class="vdr-item">
+          <span><i class="ph-fill ph-calendar-blank"></i></span>
+          <!-- EDIT: Date -->
+          <span>13 June 2026</span>
+        </div>
+        <div class="vdr-item">
+          <span><i class="ph-fill ph-clock"></i></span>
+          <!-- EDIT: Time -->
+          <span>6:00 PM Onwards</span>
+        </div>
+      </div>
+
+      <!-- EDIT: Replace href with your Google Maps link -->
+      <a href="https://maps.google.com/?q=YOUR+VENUE+ADDRESS" target="_blank" rel="noopener noreferrer" class="map-btn"
+        id="mapBtn" aria-label="Open venue location in Google Maps">
+        <span class="map-btn-icon"><i class="ph-fill ph-map-trifold"></i></span>
+        <span>Open in Google Maps</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+     SECTION 11 — RSVP PAGE
+============================================================ -->
+  <section class="rsvp-section reveal-section" id="rsvp">
+    <div class="section-label">Are You Coming?</div>
+    <h2 class="section-title">Will You Be There? <i class="ph-fill ph-confetti"></i></h2>
+    <p class="section-sub">Please let us know by <strong>10th June 2026</strong></p>
+
+    <form class="rsvp-form" id="rsvpForm" novalidate>
+      <div class="rsvp-field">
+        <label for="rsvpName">Your Full Name *</label>
+        <input type="text" id="rsvpName" name="name" placeholder="e.g. Deepa Sunil" required autocomplete="name" />
+      </div>
+      <div class="rsvp-field">
+        <label for="rsvpPhone">WhatsApp Number *</label>
+        <input type="tel" id="rsvpPhone" name="phone" placeholder="+91 XXXXX XXXXX" required autocomplete="tel" />
+      </div>
+      <div class="rsvp-field">
+        <label for="rsvpAttending">Will you attend?</label>
+        <select id="rsvpAttending" name="attending">
+          <option value="">-- Please select --</option>
+          <option value="yes_all">Yes, I'll be there!</option>
+          <option value="no">Sorry, can't make it</option>
+        </select>
+      </div>
+      <div class="rsvp-field">
+        <label for="rsvpGuests">Number of Guests</label>
+        <input type="number" id="rsvpGuests" name="guests" placeholder="1" min="1" max="10" value="1" />
+      </div>
+      <div class="rsvp-field">
+        <label for="rsvpMessage">A message for Namshiv (optional) <i class="ph-fill ph-envelope-simple"></i></label>
+        <textarea id="rsvpMessage" name="message" rows="3"
+          placeholder="Write your wishes for our little one..."></textarea>
+      </div>
+
+      <button type="submit" class="rsvp-submit" id="rsvpSubmitBtn">
+        <span class="rsvp-btn-text" id="rsvpBtnText">Count Me In! <i class="ph-fill ph-confetti"></i></span>
+      </button>
+    </form>
+
+    <!-- Success message (hidden by default) -->
+    <div class="rsvp-success" id="rsvpSuccess" style="display:none;" role="alert">
+      <div class="rsvp-success-icon"><i class="ph-fill ph-confetti"></i></div>
+      <h3>Thank you!</h3>
+      <p>We can't wait to celebrate with you.<br />See you on 13 June 2026! <i class="ph-fill ph-heart"></i></p>
+    </div>
+
+  </section>
+
+  <!-- ============================================================
+     FOOTER
+============================================================ -->
+  <footer class="site-footer">
+    <!-- EDIT: Footer text / family name -->
+    <p class="footer-name">Namshiv · 13 June 2026</p>
+    <p class="footer-love">Made with <i class="ph-fill ph-heart"></i> by gautham</p>
+  </footer>
+
+  <!-- Three.js + GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="main.js"></script>
+</body>
+
+</html>
