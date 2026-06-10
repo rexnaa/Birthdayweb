@@ -742,7 +742,7 @@ function launchConfetti(count = 60) {
         const discordPayload = {
           embeds: [{
             title: "🎉 New RSVP Received! 🎉",
-            description: `**Namshiv's 1st Birthday Invitation Response**`,
+            description: `**Namashiv's 1st Birthday Invitation Response**`,
             color: 13937463, // Gold #D4AF37
             fields: [
               { name: "👤 Guest Name", value: name, inline: true },
@@ -751,7 +751,7 @@ function launchConfetti(count = 60) {
               { name: "👥 Number of Guests", value: String(guests), inline: true },
               { name: "💌 Message/Wishes", value: message || "_None_" }
             ],
-            footer: { text: "Sent via Namshiv's Invitation Site 🎈" },
+            footer: { text: "Sent via Namashiv's Invitation Site 🎈" },
             timestamp: new Date().toISOString()
           }]
         };
@@ -846,7 +846,7 @@ window.getRSVPs = function () {
   return data;
 };
 
-console.log('%c🎈 Namshiv\'s 1st Birthday Website 🎈', 'color: #D4AF37; font-size: 18px; font-weight: bold;');
+console.log('%c🎈 Namashiv\'s 1st Birthday Website 🎈', 'color: #D4AF37; font-size: 18px; font-weight: bold;');
 console.log('%cTo view RSVPs: type getRSVPs() in console', 'color: #F2D675;');
 
 /* ──────────────────────────────────────────────────────────────────
